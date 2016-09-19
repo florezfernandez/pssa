@@ -1,0 +1,9 @@
+.myBox {
+	position: relative;
+}
+.topRight {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+

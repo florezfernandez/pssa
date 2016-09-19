@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+	<buildpathentry kind="src" path="business"/>
+	<buildpathentry kind="src" path="functions"/>
+	<buildpathentry kind="src" path="graphFiles"/>
+	<buildpathentry kind="src" path="pdf"/>
+	<buildpathentry kind="lib" path="files/HCV/NS3.zip"/>
+	<buildpathentry kind="lib" path="files/HCV/NS5A.zip"/>
+	<buildpathentry kind="lib" path="files/HCV/NS5B.zip"/>
+	<buildpathentry kind="lib" path="files/Influenza A H1N1/HA1.zip"/>
+	<buildpathentry kind="lib" path="files/Influenza A H1N1/M.zip"/>
+	<buildpathentry kind="lib" path="files/Influenza A H1N1/NA.zip"/>
+	<buildpathentry kind="lib" path="files/Influenza A H3N2/HA1.zip"/>
+	<buildpathentry kind="lib" path="files/Influenza A H3N2/M.zip"/>
+	<buildpathentry kind="lib" path="files/Influenza A H3N2/NA.zip"/>
+	<buildpathentry kind="lib" path="files/Influenza B Victoria/HA1.zip"/>
+	<buildpathentry kind="lib" path="files/Influenza B Victoria/NA.zip"/>
+	<buildpathentry kind="lib" path="files/Influenza B Yamagata/HA1.zip"/>
+	<buildpathentry kind="lib" path="files/Influenza B Yamagata/NA.zip"/>
+	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
+</buildpath>

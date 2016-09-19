@@ -1,0 +1,1 @@
+<script>location.replace("../index.php")</script>
