@@ -6,22 +6,22 @@ class RefSequence {
 	private $idGene;	
 	private $idCountry;	
 	private $name;
-	private $year;
 	private $genotype;
+	private $year;
 	private $sequence;
 	
 	private $refSequenceDAO;
 	private $conection;
 
-	function RefSequence($i = "", $idg = "", $idc = "", $nam = "", $yea = "", $gen = "", $seq = "") {
+	function RefSequence($i = "", $idg = "", $idc = "", $nam = "", $gen = "", $yea = "", $seq = "") {
 		$this -> id = $i;
 		$this -> idGene = $idg;
 		$this -> idCountry = $idc;
 		$this -> name= $nam;
-		$this -> year = $yea;		
 		$this -> genotype = $gen;
+		$this -> year = $yea;		
 		$this -> sequence = $seq;
-		$this -> refSequenceDAO = new RefSequenceDAO($this -> id, $this -> idGene, $this->idCountry, $this->name, $this->year, $this -> genotype, $this->sequence);
+		$this -> refSequenceDAO = new RefSequenceDAO($this -> id, $this -> idGene, $this->idCountry, $this->name, $this -> genotype, $this->year, $this->sequence);
 		$this -> conection = new Conection();
 	}
 

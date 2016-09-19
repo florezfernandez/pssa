@@ -6,22 +6,22 @@ class AltSequence {
 	private $idGene;	
 	private $idCountry;	
 	private $name;
-	private $year;
 	private $genotype;
+	private $year;
 	private $sequence;
 	
 	private $altSequenceDAO;
 	private $conection;
 
-	function AltSequence($i = "", $idg = "", $idc = "", $nam = "", $yea = "", $gen = "", $seq = "") {
+	function AltSequence($i = "", $idg = "", $idc = "", $nam = "", $gen = "", $yea = "", $seq = "") {
 		$this -> id = $i;
 		$this -> idGene = $idg;
 		$this -> idCountry = $idc;
 		$this -> name= $nam;
-		$this -> year = $yea;		
 		$this -> genotype = $gen;
+		$this -> year = $yea;		
 		$this -> sequence = $seq;
-		$this -> altSequenceDAO = new AltSequenceDAO($this -> id, $this -> idGene, $this->idCountry, $this->name, $this->year, $this -> genotype, $this->sequence);
+		$this -> altSequenceDAO = new AltSequenceDAO($this -> id, $this -> idGene, $this->idCountry, $this->name, $this -> genotype, $this->year, $this->sequence);
 		$this -> conection = new Conection();
 	}
 
@@ -78,7 +78,7 @@ class AltSequence {
 		$results = array();
 		$numRows = 0;
 		while ($result = $this -> conection -> fetch()) {
-			$results[$numRows] = new RefSequence($result[0], $result[1], $result[9]." (".$result[12].")", $result[3], $result[4], $result[5], $result[6]);
+			$results[$numRows] = new AltSequence($result[0], $result[1], $result[9]." (".$result[12].")", $result[3], $result[4], $result[5], $result[6]);
 			$numRows++;
 		}
 		return $results;

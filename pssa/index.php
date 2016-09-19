@@ -5,6 +5,7 @@ require_once("business/Gene.php");
 require_once("business/RefSequence.php");
 require_once("business/AltSequence.php");
 require_once("persistence/Conection.php");
+require_once("business/TreeNode.php");
 
 $color="success";
 ini_set('display_errors',"1");
@@ -53,6 +54,7 @@ if(empty($_GET['pid'])){
 		'ui/validateRefAnalysis.php',
 		'ui/validateAltAnalysis.php',
 		'ui/graphViewer.php',
+		'ui/treeViewer.php',
 		'ui/resultsRefAnalysis.php',
 		'ui/resultsAltAnalysis.php',
 		'ui/sendMail.php',

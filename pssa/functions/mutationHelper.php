@@ -1,4 +1,5 @@
 <?php
+
 function getItems($dirPath,$nivel,$selectorType,$selectorName){
 	$dir= opendir($dirPath);
 	$items = array();
@@ -203,5 +204,42 @@ $fileStream.="
 }";	
 return $fileStream;
 }
+
+function treeStream($selectedReferenceName, $sequenceRefChanges, $sequenceAltChanges, $sequencePatChanges){	
+	for($i=0; $i<count($sequenceAltChanges)-1; $i++){
+		for($j=$i+1; $j<count($sequenceAltChanges); $j++){
+			if($sequenceAltChanges[$i][1]>$sequenceAltChanges[$j][1]){
+				$temp=$sequenceAltChanges[$i];
+				$sequenceAltChanges[$i]=$sequenceAltChanges[$j];
+				$sequenceAltChanges[$j]=$temp;
+			}
+		}
+	}
+
+	for($i=0; $i<count($sequencePatChanges)-1; $i++){
+		for($j=$i+1; $j<count($sequencePatChanges); $j++){
+			if($sequencePatChanges[$i][1]>$sequencePatChanges[$j][1]){
+				$temp=$sequencePatChanges[$i];
+				$sequencePatChanges[$i]=$sequencePatChanges[$j];
+				$sequencePatChanges[$j]=$temp;
+			}
+		}
+	}
+
+	$mainNode = new TreeNode($selectedReferenceName, 0);
+	
+	for($i=0; $i<count($sequenceRefChanges); $i++){
+		$mainNode->addNode(new TreeNode($sequenceRefChanges[$i][0],count($sequenceRefChanges[$i][1])));
+	}
+	
+/*		
+	for($i=0; $i<count($sequenceAltChanges); $i++){
+		$node = $mainNode->findNodeToAdd(count($sequenceRefChanges[$i][1]));
+		$node->addNode(new TreeNode($sequenceAltChanges[$i][0],count($sequenceAltChanges[$i][1])));
+	}	*/
+	$stream=$mainNode->toStream();
+	return $stream;
+}
+
 
 ?>

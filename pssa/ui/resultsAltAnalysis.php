@@ -23,9 +23,9 @@ $patientsFilesName=$_POST['patientsFilesName'];
 $patientsContents=$_POST['patientsContents'];
 
 $baseFileName=date("YmdHis");
-$graphFile=$baseFileName.".json";
+$treeFile=$baseFileName.".json";
 $reportFile=$baseFileName.".pdf";
-$graphFilePath="graphFiles/".$graphFile;
+$treeFilePath="treeFiles/".$treeFile;
 $reportFilePath="reportFiles/".$reportFile;
 ?>
 <script type="text/javascript">
@@ -76,11 +76,14 @@ $('body').on('hidden.bs.modal', '.modal', function () {
 							}
 						?>
 						<br>
-						View Force-Direct Graph: <a href='<?php echo "index.php?pid=".base64_encode("ui/graphViewer.php")."&graphFile=".$graphFile; ?>' target="_blank"><img src="img/atom.ico" width='20' data-toggle='tooltip' data-placement='top' data-original-title='View Graph'/></a><br>
+						View Force-Direct Graph: <a href='<?php echo "index.php?pid=".base64_encode("ui/treeViewer.php")."&treeFile=".$treeFile; ?>' target="_blank"><img src="img/atom.ico" width='20' data-toggle='tooltip' data-placement='top' data-original-title='View Graph'/></a><br>
 						Results report: <a href='<?php echo "index.php?pid=".base64_encode("ui/sendMail.php")."&reportFile=".$reportFile; ?>' target="_blank"><img src="img/pdf.ico" width='20' data-toggle='tooltip' data-placement='top' data-original-title='Get report in a pdf file'/></a>
 					</div>
 					<div id="timeAlert" class="hide"></div>
-				<?php 						
+				<?php 			
+						$seqRefChanges4Tree = array();
+						$seqAltChanges4Tree = array();
+						$seqPatChanges4Tree = array();
 						for($i=0; $i<count($patientsFilesName); $i++){
 							echo "
 							<div class='panel panel-".$color."'>
@@ -89,11 +92,13 @@ $('body').on('hidden.bs.modal', '.modal', function () {
 								</div>
 							<div class='panel-body'>";
 							echo "<pre>";
-							echo "Main Reference Sequence: <strong>".$refSequences[0]->getName()."</strong><br>".$refSequences[0]->getSequence()."<br><br>";
+							echo "Main Reference Sequence: <strong>".$refSequences[0]->getName()." (".$refSequences[0]->getGenotype().")</strong> <br>".$refSequences[0]->getSequence()."<br><br>";
 							
 							for($j=1; $j<count($refSequences); $j++){
 								list($seqChanged, $changes) = calculateNucleotideChanges($refSequences[0]->getSequence(), $refSequences[$j]->getSequence());
-								echo "Reference Sequence: <strong>".$refSequences[$j]->getName()."</strong><br>".$seqChanged."<br>";
+								$seqRefChanges4Tree[$j-1][0]=$refSequences[$j]->getName();
+								$seqRefChanges4Tree[$j-1][1]=$changes;
+								echo "Reference Sequence: <strong>".$refSequences[$j]->getName()." (".$refSequences[$j]->getGenotype().")</strong> (Changes:".count($changes).")<br>".$seqChanged."<br>";
 								for($k=0; $k<count($changes); $k++){
 									echo $changes[$k][0].":".$changes[$k][1]." => ".$changes[$k][2]."; ";
 								}
@@ -101,9 +106,11 @@ $('body').on('hidden.bs.modal', '.modal', function () {
 							}
 							echo "<hr>";
 
-							for($j=1; $j<count($altSequences); $j++){
+							for($j=0; $j<count($altSequences); $j++){
 								list($seqChanged, $changes) = calculateNucleotideChanges($refSequences[0]->getSequence(), $altSequences[$j]->getSequence());
-								echo "Altertative Sequence: <strong>".$altSequences[$j]->getName()."</strong><br>".$seqChanged."<br>";
+								$seqAltChanges4Tree[$j][0]=$altSequences[$j]->getName();
+								$seqAltChanges4Tree[$j][1]=$changes;
+								echo "Altertative Sequence: <strong>".$altSequences[$j]->getName()." (".$altSequences[$j]->getGenotype().")</strong> (Changes:".count($changes).")<br>".$seqChanged."<br>";
 								for($k=0; $k<count($changes); $k++){
 									echo $changes[$k][0].":".$changes[$k][1]." => ".$changes[$k][2]."; ";
 								}
@@ -112,71 +119,20 @@ $('body').on('hidden.bs.modal', '.modal', function () {
 							echo "<hr>";
 							
 							$patientData = split(">", $patientsContents[$i]);
-							for($j=1; $j<count($patientData); $j++){
+							for($j=0; $j<count($patientData); $j++){
 								$patientDataArray = split("\n", $patientData[$j]);
 								$patienSequence=strtoupper(mergeArrayInfo($patientDataArray,1));
 								list($seqChanged, $changes) = calculateNucleotideChanges($refSequences[0]->getSequence(), $patienSequence);
-								echo "Patient Sequence: <strong>".trim($patientDataArray[0])."</strong><br>".$seqChanged."<br>";
+								$seqPatChanges4Tree[$j][0]=trim($patientDataArray[0]);
+								$seqPatChanges4Tree[$j][1]=$changes;
+								echo "Patient Sequence: <strong>".trim($patientDataArray[0])."</strong> (Changes:".count($changes).")<br>".$seqChanged."<br>";
 								for($k=0; $k<count($changes); $k++){
 									echo $changes[$k][0].":".$changes[$k][1]." => ".$changes[$k][2]."; ";
 								}
 								echo "<br><br>";								
 							}	
 							echo "</pre>";
-/*							$patientData = split(">", $patientsContents[$i]);
-							for($j=1; $j<count($patientData); $j++){
-								$patientDataArray = split("\n", $patientData[$j]);
-								echo "<h4 class='text-center'>".trim($patientDataArray[0])."</h4>";
-								echo "<pre>";
-								$patienSequence=strtoupper(mergeArrayInfo($patientDataArray,1));
-								for($k=0; $k<count($altSequences); $k++){
-									$changes = calculateNucleotideChanges($altSequences[$k]->getSequence(), $patienSequence);
-									echo $altSequences[$k]->getName()."<br>";
-									for($l=0; $l<count($changes); $l++){
-										echo $changes[$l][0].":".$changes[$l][1]." => ".$changes[$l][2]."; ";
-									}
-									echo "<br>";
-								}
-								echo "</pre>";
-*/								
-
-/*								$secuenceChanges[$i][$j][0]=$patientsFilesName[$i].". ".trim($patientDataArray[0]);
-								list($changes, $changesCount, $equChanges, $equChangesConf)=calculateTripletsChanges($refSequence->getSequence(), strtoupper(mergeArrayInfo($patientDataArray,1)));
-								echo "<table class='table table-striped table-hover'>";
-								echo "<tr><td width='50%'><strong>Nucleotides</strong></td><td width='50%'><strong>Amino Acid</strong></td></tr>";								
-								echo "<tr><td><pre>";
-								$reportSummary[$i][$j][0]=$patientDataArray[0];
-								$reportSummary[$i][$j][1]=0;								
-								$reportSummary[$i][$j][2]=0;															
-								for($k=0; $k<count($changes); $k++){
-									if($changesCount[$k]!=0){
-										echo $changes[$k]." = ".$changesCount[$k]."<br>";
-										$reportSummary[$i][$j][1]+=$changesCount[$k];
-										$reportNucleotide[$i][$j][$k]=$changes[$k]." = ".$changesCount[$k];										
-									}else{
-										$reportNucleotide[$i][$j][$k]="";										
-									}
-								}
-								echo "</pre></td><td><pre>";
-								$secuenceChangesCount=0;
-								$secuenceChangesDescription="";
-								for($k=0; $k<count($equChanges); $k++){
-									$reportAminoacid[$i][$j][$k][0]=$equChanges[$k];
-									$reportAminoacid[$i][$j][$k][1]=$equChangesConf[$k];
-									if($equChangesConf[$k]=="yes"){
-										echo "<div class='bg-danger'>".$equChanges[$k]."</div>";
-										$secuenceChangesCount++;
-										$secuenceChangesDescription.=$equChanges[$k].". ";		
-									}else{
-										echo $equChanges[$k]."<br>";
-									}
-								}
-								$secuenceChanges[$i][$j][1]=$secuenceChangesCount;
-								$secuenceChanges[$i][$j][2]=$secuenceChangesDescription;								
-								$reportSummary[$i][$j][2]=$secuenceChangesCount;
-								echo "</pre></td></tr></table>";
-							}
-*/							echo "</div></div>";
+							echo "</div></div>";
 						}
 					?>
 				</div>
@@ -185,10 +141,11 @@ $('body').on('hidden.bs.modal', '.modal', function () {
 	</div>
 </div>
 <?php
-/*$fileStream=graphStream($gene->getName(), $secuenceChanges);
-setFileContent($graphFilePath, $fileStream);
-createPDF($reportFilePath, $gene->getName(), $patientsFilesName, $reportSummary, $reportNucleotide, $reportAminoacid);
-*/
+$fileStream=treeStream($refSequences[0]->getName(),$seqRefChanges4Tree,$seqAltChanges4Tree,$seqPatChanges4Tree);
+setFileContent($treeFilePath, $fileStream);
+
+//createPDF($reportFilePath, $gene->getName(), $patientsFilesName, $reportSummary, $reportNucleotide, $reportAminoacid);
+
 $endTime = microtime_float();
 $time = round($endTime - $startTime,3);	
 ?>
